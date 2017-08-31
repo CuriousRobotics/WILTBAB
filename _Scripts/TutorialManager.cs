@@ -114,6 +114,7 @@ public class TutorialManager : MonoBehaviour {
 		obstaclesTutorial.SetActive(true);
 		otIRAnatomy.SetActive(true);
 	}
+
 	public void ObstaclesTutorialTransition(string fromSection){
 		switch(fromSection){
 			case "IR Anatomy":
@@ -137,6 +138,7 @@ public class TutorialManager : MonoBehaviour {
 				break;
 		}
 	}
+
 	public void EnterTutorialSounds(){
 		tutorialState = "Sounds";
 		currentState = tutorialState;
@@ -154,6 +156,7 @@ public class TutorialManager : MonoBehaviour {
 	//Third: The Environment does not currently reset either.... Obstacles that were seen by IRs in TutorialObstacles,
 	//are still visible if there is a switch back to Main, and then to TutorialLight, for example.
 	public void Return(){
+		GameObject[] envWalls;
 		Debug.Log("Returning from " + currentState);
 		SwitchTutorialButtons();
 		robotManager.DeactivateSensorsOfType("IR");
@@ -163,6 +166,10 @@ public class TutorialManager : MonoBehaviour {
 		currentState = tutorialState;
 		ResetRobotObject();
 		Destroy(envLightObject);
+		envWalls = GameObject.FindGameObjectsWithTag("Wall");
+		foreach(GameObject wall in envWalls){
+			wall.transform.GetComponent<MeshRenderer>().enabled = false;
+		}
 		robotController.enabled = false;
 		locomotionCanvas.enabled = false;
 	}

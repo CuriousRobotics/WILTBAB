@@ -77,6 +77,15 @@ public class TaskManager : MonoBehaviour {
 			TaskThreeWalls();
 			robotManager.ActivateSensorsOfType("RGB");
 		}else if(SceneManager.GetActiveScene().name == "Task4"){
+			if(robotObject == null){
+				robotObject  = GameObject.Find("Robot");
+				//If there isn't a robot yet, reset.
+				if(robotObject == null){
+					ResetRobotObject();
+				}
+				robotObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+			}
+			SetupCameraPOV();
 			robotManager.ActivateSensorsOfType("LDR");
 			robotManager.ActivateSensorsOfType("IR");
 			robotManager.ActivateSensorsOfType("MIC");
@@ -90,6 +99,9 @@ public class TaskManager : MonoBehaviour {
 		Quaternion robotRotation  = Quaternion.identity;
 		Quaternion cameraRotation = Quaternion.identity;
 		cameraRotation.x 		  = 90f;
+		//Start by trying to find a robot if it already exists.
+		robotObject = GameObject.Find("Robot");
+		//If the robot does exist, destroy it.
 		if(robotObject != null){
 			robotManager.DestroySensors();
 			Destroy(robotObject);
@@ -98,17 +110,22 @@ public class TaskManager : MonoBehaviour {
 			Debug.Log("ResetRobotObject() - cameraAudioListener.enabled? " + RobotManager.cameraAudioListener.enabled);
 			//RobotController.initialized = false;
 		}
+		//Whether a previous robot existed or not, instantiate a new one.
 		robotObject 	= GameObject.Instantiate(robotPrefab, robotPosition, robotRotation);
 		robotController = robotObject.GetComponent<RobotController>();
 		robotManager.InitializeRobot();
 
+		SetupCameraPOV();
+		Debug.Log(RobotManager.robotCam.name + " has parent " + RobotManager.robotCam.transform.parent.name);
+		//Debug.Log("ResetRobotObject(): position - " + robotObject.transform.position.ToString() + " orientation - " + robotObject.transform.rotation.ToString());
+		//robotObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+	}
+
+	void SetupCameraPOV(){
 		RobotManager.robotCam.transform.SetParent(robotObject.transform);
 		RobotManager.robotCam.transform.position = robotObject.transform.position + new Vector3(0f, 750f, 0f);
 		RobotManager.robotCam.transform.rotation = robotObject.transform.rotation;
 		RobotManager.robotCam.transform.Rotate(new Vector3(90f, 0f, 0f));
-		Debug.Log(RobotManager.robotCam.name + " has parent " + RobotManager.robotCam.transform.parent.name);
-		//Debug.Log("ResetRobotObject(): position - " + robotObject.transform.position.ToString() + " orientation - " + robotObject.transform.rotation.ToString());
-		//robotObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 	}
 
 	void TaskThreeWalls(){
