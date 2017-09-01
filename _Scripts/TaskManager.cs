@@ -15,6 +15,7 @@ public class TaskManager : MonoBehaviour {
 	GameObject envLightObject;
 	public GameObject envWallPrefab;
 	GameObject[] envWalls;
+	string currentTask;
 
 	// Use this for initialization
 	void Start () {
@@ -34,14 +35,20 @@ public class TaskManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		currentTask = SceneManager.GetActiveScene ().name;
+		if (taskCanvas.enabled == false) {
+			Debug.Log ("Checking for Task transition for " + currentTask);
+			TaskTransitions ();
+		} else {
+			Debug.Log ("taskCanvas enabled? " + taskCanvas.enabled);
+		}
 	}
 
 	public void EnterTask(){
 		Vector3 envLightPos;
 		Debug.Log("EnterTask()");
 
-		if(SceneManager.GetActiveScene().name == "Task1"){//Or do this by tags?
+		if(currentTask == "Task1"){//Or do this by tags?
 			ResetRobotObject();
 			robotManager.DeactivateSensorsOfType("IR");
 			robotManager.DeactivateSensorsOfType("LDR");
@@ -55,7 +62,7 @@ public class TaskManager : MonoBehaviour {
 			envLightPos 	  				  = envLightObject.transform.position;
 			envLightPos.x      				  = 0.0f;
 			envLightObject.transform.position = envLightPos;
-		}else if(SceneManager.GetActiveScene().name == "Task2"){
+		}else if(currentTask == "Task2"){
 			ResetRobotObject();
 			robotManager.DeactivateSensorsOfType("IR");
 			robotManager.DeactivateSensorsOfType("LDR");
@@ -65,7 +72,7 @@ public class TaskManager : MonoBehaviour {
 
 			robotManager.ActivateSensorsOfType("MIC");
 			robotManager.ActivateSensorsOfType("IR");
-		}else if(SceneManager.GetActiveScene().name == "Task3"){
+		}else if(currentTask == "Task3"){
 			ResetRobotObject();
 			robotManager.DeactivateSensorsOfType("IR");
 			robotManager.DeactivateSensorsOfType("LDR");
@@ -76,7 +83,7 @@ public class TaskManager : MonoBehaviour {
 			//robotManager.ActivateSensorsOfType("IR");
 			TaskThreeWalls();
 			robotManager.ActivateSensorsOfType("RGB");
-		}else if(SceneManager.GetActiveScene().name == "Task4"){
+		}else if(currentTask == "Task4"){
 			if(robotObject == null){
 				robotObject  = GameObject.Find("Robot");
 				//If there isn't a robot yet, reset.
@@ -92,6 +99,26 @@ public class TaskManager : MonoBehaviour {
 			robotManager.ActivateSensorsOfType("RGB");
 		}
 		taskCanvas.enabled 				  = false;
+	}
+
+	void TaskTransitions(){
+		Debug.Log ("TaskTransitions() " + currentTask);
+		switch (currentTask) {
+		case "Task1":
+				Debug.Log ("Light distance = " + envLightObject.GetComponent<EnvLight> ().distanceFromMe);
+				if (envLightObject.GetComponent<EnvLight> ().distanceFromMe <= 170) {
+					Debug.Log ("Task1: Found Light Source... Transition to Task2");
+				}
+				break;
+			case "Task2":
+				break;
+			case "Task3":
+				break;
+			case "Task4":
+				break;
+			default:
+				break;
+		}
 	}
 
 	public void ResetRobotObject(){
@@ -127,7 +154,7 @@ public class TaskManager : MonoBehaviour {
 		RobotManager.robotCam.transform.rotation = robotObject.transform.rotation;
 		RobotManager.robotCam.transform.Rotate(new Vector3(90f, 0f, 0f));
 	}
-
+		
 	void TaskThreeWalls(){
 		int i = new int();
 		Vector3 wallPosition = new Vector3();

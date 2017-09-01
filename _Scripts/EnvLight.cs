@@ -22,7 +22,7 @@ public class EnvLight : MonoBehaviour {
 			if(robotLDR != null){
 				distanceFromMe = (transform.position - robotLDR.transform.parent.position).magnitude;
 				intensity = (1.0f / (distanceFromMe + 0.1f)) * 1000;
-				Debug.Log("Light distance: " + distanceFromMe.ToString() + " Intensity: " + intensity.ToString());
+				//Debug.Log("Light distance: " + distanceFromMe.ToString() + " Intensity: " + intensity.ToString());
 				robotLDR.intensity = intensity;
 			}
 		}

@@ -69,10 +69,10 @@ public class TutorialManager : MonoBehaviour {
 			Debug.Log(tutorialState + " should be Sounds");
 
 		}else if(tutorialState == "Obstacles"){
-			Debug.Log(tutorialState + " should be Obstacles");
+			//Debug.Log(tutorialState + " should be Obstacles");
 
 		}else if(tutorialState == "Main"){
-			Debug.Log(tutorialState + " should be Main");
+			//Debug.Log(tutorialState + " should be Main");
 
 		}
 
@@ -91,6 +91,7 @@ public class TutorialManager : MonoBehaviour {
 		locomotionCanvas.enabled = true;
 		SwitchTutorialButtons();
 	}
+
 	public void EnterTutorialLight(){
 		tutorialState = "Light";
 		currentState = tutorialState;
@@ -104,6 +105,7 @@ public class TutorialManager : MonoBehaviour {
 		envLightObject = GameObject.Instantiate(envLightPrefab, environment.transform);
 		SwitchTutorialButtons();
 	}
+
 	public void EnterTutorialObstacles(){
 		tutorialState = "Obstacles";
 		currentState = tutorialState;
@@ -116,8 +118,10 @@ public class TutorialManager : MonoBehaviour {
 	}
 
 	public void ObstaclesTutorialTransition(string fromSection){
+		Debug.Log ("ObstacleTutorialTransition() from " + fromSection);
 		switch(fromSection){
 			case "IR Anatomy":
+				Debug.Log ("Continue button pressed in IR Anatomy");
 				otIRAnatomy.SetActive(false);
 				otIRFunctionality.SetActive(true);
 				break;
